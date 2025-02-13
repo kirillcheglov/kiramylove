@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Valentine's Card</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #ff0049;
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .header .contacts {
+            text-align: center;
+            color: #ff7070;
+            margin: 1rem;
+            font-family: "Ubuntu", sans-serif;
+        }
+
+        .main-card {
+            background: #fffce2;
+            border-radius: 30px 30px 0 0;
+            width: 100%;
+            height: 85vh;
+            position: fixed;
+            bottom: -85vh;
+            animation: slideUp 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            overflow-y: auto; /* Добавлена прокрутка */
+        }
+
+        .heart-container {
+            opacity: 0;
+            animation: fadeIn 1s ease 1.5s forwards;
+            transform: scale(0.8);
+            margin-top: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .heart-icon {
+            width: 150px;
+            height: 150px;
+            fill: #ff0049;
+            filter: drop-shadow(0 4px 8px rgba(255, 0, 73, 0.2));
+        }
+
+        .text-container {
+            opacity: 0;
+            animation: fadeInUp 1s ease 2s forwards;
+            text-align: center;
+            margin-top: 2rem;
+            max-width: 500px;
+        }
+
+        .love-text {
+            font-size: 20px;
+            color: #000;
+            margin: 1rem 0;
+            line-height: 1.2;
+            font-family: "Ubuntu", sans-serif;
+        }
+
+        .text-title {
+            font-size: 20px;
+            color: #aaa;
+            font-family: "Ubuntu", sans-serif;
+        }
+
+        .love-text-title {
+            font-size: 30px;
+            color: #000;
+            line-height: 1.1;
+            font-family: "Ubuntu", sans-serif;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: 2rem auto 0;
+            opacity: 0;
+            animation: fadeInUp 1s ease 2.5s forwards;
+        }
+
+        .slider {
+            position: relative;
+            aspect-ratio: 3/4;
+            background: #ffe6e6;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slider-controls {
+            position: absolute;
+            top: 92%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            z-index: 1;
+        }
+
+        .slider-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .slider-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .slider-btn::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-left: 3px solid #ff0049;
+            border-bottom: 3px solid #ff0049;
+        }
+
+        .prev-btn::after {
+            transform: translateX(2px) rotate(45deg);
+        }
+
+        .next-btn::after {
+            transform: translateX(-2px) rotate(-135deg);
+        }
+
+        @keyframes slideUp {
+            to { bottom: 0; }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-height: 600px) {
+            .main-card { height: 90vh; }
+            .heart-icon { width: 100px; height: 100px; }
+        }
+
+        .heart-particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleFly 1s ease-out;
+        }
+
+        @keyframes particleFly {
+            0% { 
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0.3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p class="contacts">от кирюхи для киры</p>
+    </div>
+    <div class="main-card">
+        <div class="text-title">
+            нажми на сердечко ⬇️ :)
+        </div>
+        <div class="heart-container" onclick="animateHeart(event)">
+            <svg class="heart-icon" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
+
+        <div class="text-container">
+            <div class="love-text-title">
+                Моей классной девочке
+            </div>
+            <div class="love-text">
+                солнышко, ты бы знала, как сильно я тебя люблю, правда❤️
+                ты очень много для меня значишь, и капец мы через многое с тобой уже прошли)
+            </div>
+            <div class="love-text">
+                я ужасно сильно рад, что ты у меня есть, ты стала для меня очень важной частью жизни
+            </div>
+        </div>
+
+        <div class="slider-container">
+            <div class="slider">
+                <div class="slide active" style="background-image: url('https://i.ibb.co/tMXhky2z/IMG-20250205-185635-702.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/XfyCnDCQ/IMG-20250208-164211-169.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/ZRP4Grs2/IMG-20250208-164220-991.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/yFvSRSRb/IMG-20250208-164229-938.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/nMwCDgkX/IMG-20250208-164239-258.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/bMDKKr4v/IMG-20250208-164244-605.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/DgmzZXSk/IMG-20250213-230937-710.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/SDrx78RD/IMG-20250213-231018-860.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/MD7L9n72/IMG-20250213-231041-336.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/VYmVGCtP/IMG-20250213-231137-253.jpg')"></div>
+                <div class="slide" style="background-image: url('https://i.ibb.co/rR2kWx3m/IMG-20250213-231148-505.jpg')"></div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn prev-btn" onclick="changeSlide(-1)"></button>
+                <button class="slider-btn next-btn" onclick="changeSlide(1)"></button>
+            </div>
+        </div>
+        <div class="text-container">
+            <div class="love-text">
+                смотри какие мы с тобой милые и какая ты у меня красивая блин вообще)
+            </div>
+            <div class="love-text">
+                и я бы хотел, что бы у тебя все всегда было хорошо, я очень сильно тебя люблю, просто за то, что ты есть, за то, что ездишь ко мне, за каждый проведенный с тобой день, за каждое твое сообщение, за каждую минуту, которую мы проговорили по звонку, за каждую пророненную тобой слезу, за каждый час обнимашек с тобой, за твою красоту, за твою улыбку, за твои волосы, за твои красивые глаза, милые щеки, красивые и сладкие губы
+            </div>
+            <div class="love-text">
+                я люблю тебя за все, и всю, солнышко мое❤️
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+function animateHeart(e) {
+            const heart = e.currentTarget;
+            heart.style.transform = 'scale(1.1)';
+            setTimeout(() => { heart.style.transform = 'scale(1)'; }, 200);
+            createParticles(e.clientX, e.clientY);
+        }
+
+        function createParticles(x, y) {
+            const colors = ['#ff0049', '#ff1493', '#ff69b4'];
+            for(let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'heart-particle';
+                particle.innerHTML = '❤️';
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.fontSize = `${Math.random() * 10 + 20}px`;
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = (Math.PI * 2) * Math.random();
+                const speed = 100 + Math.random() * 150;
+                const tx = Math.cos(angle) * speed;
+                const ty = Math.sin(angle) * speed;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${-ty}px`);
+
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function changeSlide(direction) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            resetInterval();
+        }
+
+        let slideInterval = setInterval(() => changeSlide(1), 5000);
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => changeSlide(1), 5000);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
