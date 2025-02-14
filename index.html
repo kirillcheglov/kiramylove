@@ -186,6 +186,7 @@
             pointer-events: none;
             opacity: 0;
             animation: particleFly 1s ease-out;
+            z-index: 100;
         }
 
         @keyframes particleFly {
@@ -268,12 +269,18 @@ function animateHeart(e) {
 
         function createParticles(x, y) {
             const colors = ['#ff0049', '#ff1493', '#ff69b4'];
+            const maxDistance = 300;
             for(let i = 0; i < 8; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'heart-particle';
                 particle.innerHTML = '❤️';
-                particle.style.left = `${x}px`;
-                particle.style.top = `${y}px`;
+
+                const rect = document.querySelector('.main-card').getBoundingClientRect();
+                const offsetX = x - rect.left;
+                const offsetY = y - rect.top;
+
+                particle.style.left = `${offsetX}px`;
+                particle.style.top = `${offsetY}px`;
                 particle.style.fontSize = `${Math.random() * 10 + 20}px`;
                 particle.style.color = colors[Math.floor(Math.random() * colors.length)];
                 
